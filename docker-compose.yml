@@ -1,0 +1,66 @@
+# =============================================================================
+# 生产编排：应用容器（API + 前端静态托管，单域名 8002）
+#
+#   docker compose up -d --build     # 启动
+#   打开 http://127.0.0.1:8002/      # 登录页
+#
+# 说明：
+# - 默认检索后端是 RAGFlow（独立部署，不在本 compose 内），应用容器直连其 API；
+# - Milvus 属于备选检索路线，放在 `milvus` profile 下，
+#   需要 `RETRIEVAL_BACKEND=milvus` 时执行：docker compose --profile milvus up -d
+# - 用户/审计数据在 SQLite（output/auth/users.db），经卷挂载持久化到宿主机 ./output，
+#   容器重建不丢数据；正式多副本部署时应替换为 PostgreSQL。
+# =============================================================================
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: customer-support-rag:latest
+    container_name: customer-support-app
+    env_file:
+      - .env
+    environment:
+      # 容器内 localhost 指容器自身；RAGFlow 跑在宿主机时必须用 host.docker.internal。
+      # 走 9380（RAGFlow API 直连端口）：80 端口经 host.docker.internal 会 502。
+      # 若 RAGFlow 部署在其他机器，请改成对应地址后 docker compose up -d 重建。
+      RAGFLOW_BASE_URL: http://host.docker.internal:9380
+    ports:
+      - "8002:8002"
+    volumes:
+      # 持久化：用户库、审计、工单、运行产物
+      - ./output:/app/output
+      - ./logs:/app/logs
+      # 知识库文档（如需在容器外增删文档后重新 ingest）
+      - ./data/knowledge_base:/app/data/knowledge_base
+      # 商品目录（数据流水线产物）：买家贴货源链接时映射成具体商品用，只读即可
+      - ./data/raw:/app/data/raw:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys;sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8002/healthz',timeout=4).status==200 else 1)"]
+      interval: 30s
+      timeout: 5s
+      start_period: 20s
+      retries: 3
+    # 预留：接 RAGFlow 与 LLM 均为出站 HTTPS，无需额外网络；如要限出站可在此加网络策略
+
+  # ---------------- 备选检索后端：Milvus（按需启用） ----------------
+  milvus:
+    image: milvusdb/milvus:v2.4.0
+    container_name: customer-support-milvus
+    profiles: ["milvus"]
+    command: ["milvus", "run", "standalone"]
+    ports:
+      - "19530:19530"
+      - "9091:9091"
+    environment:
+      ETCD_USE_EMBED: "true"
+      ETCD_DATA_DIR: /var/lib/milvus/etcd
+      COMMON_STORAGETYPE: "local"
+    volumes:
+      - milvus_data:/var/lib/milvus
+    restart: unless-stopped
+
+volumes:
+  milvus_data:

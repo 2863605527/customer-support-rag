@@ -1,0 +1,33 @@
+{
+  "description": "检索质量评测集：用于标定 RETRIEVAL_SCORE_THRESHOLD 与向量/关键词权重。relevant=true 的问题只要命中 expect_sources 中任意一份文档即算召回（同一问题常有多份文档都覆盖，例如 faq.md 与 policies/*.md 会互相重叠）；relevant=false 的问题任何命中都算误检。",
+  "version": 2,
+  "queries": [
+    { "query": "返品はできますか？", "relevant": true, "expect_sources": ["after_sales_policy.md", "faq.md"] },
+    { "query": "返金してもらえますか？", "relevant": true, "expect_sources": ["after_sales_policy.md", "faq.md"] },
+    { "query": "交換は可能ですか？", "relevant": true, "expect_sources": ["after_sales_policy.md", "faq.md"] },
+    { "query": "何日で届きますか？", "relevant": true, "expect_sources": ["shipping_policy.md", "faq.md"] },
+    { "query": "送料は無料ですか？", "relevant": true, "expect_sources": ["shipping_policy.md", "faq.md"] },
+    { "query": "海外発送は追跡できますか？", "relevant": true, "expect_sources": ["shipping_policy.md", "faq.md"] },
+    { "query": "関税はかかりますか？", "relevant": true, "expect_sources": ["payment_and_tax.md", "faq.md"] },
+    { "query": "支払い方法を教えてください", "relevant": true, "expect_sources": ["payment_and_tax.md", "faq.md"] },
+    { "query": "品質保証はありますか？", "relevant": true, "expect_sources": ["quality_warranty.md", "faq.md"] },
+    { "query": "不良品だったらどうなりますか？", "relevant": true, "expect_sources": ["quality_warranty.md", "after_sales_policy.md", "faq.md"] },
+    { "query": "布団のサイズを教えてください", "relevant": true, "expect_sources": ["size_guide.md", "faq.md"] },
+    { "query": "シングルとダブルの違いは何ですか？", "relevant": true, "expect_sources": ["size_guide.md", "faq.md"] },
+    { "query": "敷き布団の重さはどう選べばいいですか？", "relevant": true, "expect_sources": ["size_guide.md", "faq.md"] },
+    { "query": "お店について教えてください", "relevant": true, "expect_sources": ["store_profile.md", "faq.md"] },
+    { "query": "枕カバーの洗い方は？", "relevant": true, "expect_sources": ["faq.md", "KB-"] },
+    { "query": "蚊帳はどんな素材ですか？", "relevant": true, "expect_sources": ["KB-0001.md", "KB-"] },
+
+    { "query": "今日の東京の天気を教えて", "relevant": false },
+    { "query": "おすすめの映画を教えてください", "relevant": false },
+    { "query": "Pythonのfor文の書き方は？", "relevant": false },
+    { "query": "明日の会議の予定は？", "relevant": false },
+    { "query": "車のオイル交換はどこでできますか？", "relevant": false },
+    { "query": "カレーのレシピを教えて", "relevant": false },
+    { "query": "宇宙人は存在しますか？", "relevant": false },
+    { "query": "英会話を上達させる方法は？", "relevant": false },
+    { "query": "近くの美味しいラーメン店は？", "relevant": false },
+    { "query": "犬の散歩は一日何回がいい？", "relevant": false }
+  ]
+}

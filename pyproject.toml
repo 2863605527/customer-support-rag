@@ -1,0 +1,91 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "customer-support-rag"
+version = "0.2.0"
+description = "跨境店铺多语言智能客服 RAG 问答系统（TikTok 日本站寝具店铺）"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Your Name" }]
+keywords = ["customer-support", "rag", "ragflow", "agent", "multilingual", "cross-border"]
+dependencies = [
+    # ---- LLM / Agent 框架（OpenAI 兼容协议）----
+    "langchain>=0.3.0",
+    "langchain-community>=0.3.0",
+    "langchain-openai>=0.2.0",
+    "langchain-text-splitters>=0.3.0",
+    "langgraph>=0.2.0,<1.0",
+    "openai>=1.40.0",
+    # ---- HTTP（RAGFlow 检索与入库）----
+    "httpx>=0.27.0",
+    # ---- 文档解析 ----
+    "pypdf>=4.0.0",
+    # ---- 配置 / 校验 ----
+    "pydantic>=2.0.0",
+    "pydantic-settings>=2.0.0",
+    "python-dotenv>=1.0.0",
+    # ---- API 服务 ----
+    "fastapi>=0.111.0",
+    "uvicorn[standard]>=0.30.0",
+    "click>=8.1.0",
+    # ---- 鉴权 / 账号安全 ----
+    "PyJWT>=2.8.0",  # access/refresh 令牌签发与校验
+    "bcrypt>=4.1.0",  # 密码加盐哈希（自适应成本因子）
+    "email-validator>=2.1.0",  # 邮箱格式校验（pydantic EmailStr 依赖）
+]
+
+[project.optional-dependencies]
+# 默认检索后端是 RAGFlow，不需要 Milvus；只有切到 milvus 后端才需要装这个 extra
+milvus = ["pymilvus>=2.4.0"]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-cov>=5.0.0",
+    "ruff>=0.5.0",
+    "mypy>=1.10.0",
+    "pre-commit>=3.0.0",
+    "httpx>=0.27.0",
+]
+all = ["customer-support-rag[milvus,dev]"]
+
+[project.scripts]
+customer-support = "customer_support.main:cli"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+# ==================== 测试配置 ====================
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v --cov=customer_support --cov-report=term-missing"
+markers = [
+    "integration: 需要真实依赖（RAGFlow / Milvus / LLM API）的集成测试",
+]
+
+# ==================== 代码质量 ====================
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+src = ["src", "tests", "scripts"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W", "B", "UP"]
+ignore = ["E501"]
+
+[tool.ruff.lint.per-file-ignores]
+# FastAPI 的标准写法就是「在参数默认值里调用 Depends/Query」，B008 在此是误报
+"src/customer_support/api/**" = ["B008"]
+# 选品脚本里 surplus() 每次迭代重新定义并立即使用，闭包不会逃逸，B023 是误报
+"scripts/harvest_zhaojiafang.py" = ["B023"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.mypy]
+python_version = "3.10"
+plugins = ["pydantic.mypy"]
+warn_unused_ignores = true
+ignore_missing_imports = true

@@ -1,0 +1,60 @@
+/** 全局样式：浅色主题，企业工作台风格。 */
+:root {
+  --c-bg: #f5f6f8;
+  --c-panel: #ffffff;
+  --c-border: #e3e6ea;
+  --c-text: #1f2733;
+  --c-text-dim: #6b7684;
+  --c-primary: #2456e6;
+  --c-primary-soft: #eaf0fe;
+  --c-buyer-bg: #2456e6;
+  --c-agent-bg: #ffffff;
+  --c-ok: #178a50;
+  --c-warn: #c46a00;
+  --c-err: #c0392b;
+  --radius: 12px;
+}
+
+* { box-sizing: border-box; }
+
+html, body, #app {
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  font-family: "Segoe UI", "PingFang SC", "Hiragino Sans", "Microsoft YaHei", sans-serif;
+  background: var(--c-bg);
+  color: var(--c-text);
+  font-size: 14px;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+}
+
+input, textarea {
+  font: inherit;
+  color: inherit;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  line-height: 18px;
+  background: var(--c-primary-soft);
+  color: var(--c-primary);
+  white-space: nowrap;
+}
+
+.badge.warn { background: #fdf1e0; color: var(--c-warn); }
+.badge.err  { background: #fbe9e7; color: var(--c-err); }
+.badge.ok   { background: #e5f5ec; color: var(--c-ok); }
+.badge.dim  { background: #eef0f3; color: var(--c-text-dim); }

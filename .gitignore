@@ -1,0 +1,45 @@
+# 环境与密钥
+.env
+*.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# 数据与产物
+data/vectors/*
+!data/vectors/.gitkeep
+output/*
+!output/.gitkeep
+logs/
+*.log
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# 本地临时文件（工具输出抓取等）
+.ruff-out.txt
+.mypy-out.txt
+.pytest-out.txt
+.kbgen-out.txt
+ingest.log
+.pytest*
+
+# pytest --basetemp 临时目录（tests/unit/test_transfer_attribution.py 等使用 .pt-* 前缀）
+.pt-*/
+
+# AI 工作区（内部笔记，不属于项目源码）
+.workbuddy/

@@ -1,0 +1,24 @@
+# 构建上下文瘦身：加速构建、避免敏感文件进镜像
+.git
+.venv
+venv
+node_modules
+frontend/node_modules
+frontend/dist
+output
+logs
+data/raw
+data/*.db
+*.db
+.env
+.env.*
+!.env.example
+__pycache__
+*.pyc
+.pytest_cache
+.mypy_cache
+.ruff_cache
+docs
+tests
+scripts
+Makefile
