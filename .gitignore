@@ -18,6 +18,8 @@ build/
 htmlcov/
 
 # 数据与产物
+data/raw/*
+!data/raw/.gitkeep
 data/vectors/*
 !data/vectors/.gitkeep
 output/*

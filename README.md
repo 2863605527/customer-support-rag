@@ -333,7 +333,7 @@ python scripts/calibrate_threshold.py --check --min-recall 0.9
 ```bash
 TOKEN=$(curl -s -X POST http://127.0.0.1:8002/api/v1/auth/login \
   -H "Content-Type: application/json" \
-  -d '{"email":"admin@kurashi-bedding.jp","password":"你的密码"}' | python -c "import sys,json;print(json.load(sys.stdin)['access_token'])")
+  -d '{"email":"admin@kurashi-bedding.jp","password":"YOUR_PASSWORD"}' | python -c "import sys,json;print(json.load(sys.stdin)['access_token'])")
 
 curl -X POST http://127.0.0.1:8002/api/v1/chat \
   -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
@@ -566,7 +566,7 @@ customer-support-rag/
 ├── data/
 │   ├── knowledge_base/              # 知识库文档（products/policies/store）
 │   └── raw/zhaojiafang/             # 采集原始数据（列表 + 详情 + catalog.json）
-├── docs/                            # getting-started / architecture / development / benchmark
+├── docs/                            # getting-started / architecture / development / tiktok-integration / audit
 └── output/ logs/                    # 运营库（console.db）/ 用户库 / 日志（运行期生成）
 ```
 

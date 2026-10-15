@@ -1,9 +1,9 @@
 # 从零启动指南（Getting Started）
 
-> 面向第一次接触本项目的人。照着做完，你能在本地跑起一个**能真实回答海外买家问题、
-> 答不出来会转人工**的多语言客服机器人。
->
-> 只想看命令 → 直接跳到 [§2](#2-首次启动一步步来windows)。
+面向第一次接触本项目的人。按步骤操作，即可在本地跑起一个**能真实回答海外买家问题、
+答不出来会转人工**的多语言客服机器人。
+
+只想看命令 → 直接跳到 [§2](#2-首次启动一步步来windows)。
 
 ---
 
@@ -70,7 +70,7 @@ pip install -e ".[dev]"
 - 第 1 行：建一个隔离的 Python 环境 `.venv`（不污染系统 Python）；
 - 第 2 行：激活它 —— 成功后命令提示符前面会出现 `(.venv)`；
 - 第 3 行：把项目装成「可编辑模式」，并安装开发依赖（测试 / lint 工具）。
-  装完你就拥有 `customer-support` 这个命令。
+  装完后即可使用 `customer-support` 命令。
 
 > 如果之后提示 `customer-support` 找不到：要么第 3 行没装成功，要么虚拟环境没激活。
 >
@@ -86,7 +86,7 @@ copy .env.example .env
 
 | 变量 | 填什么 |
 |---|---|
-| `LLM_API_KEY` | 你的大模型 Key |
+| `LLM_API_KEY` | 大模型 API Key |
 | `RAGFLOW_API_KEY` | RAGFlow 后台「API」页签里的 Key |
 
 > `.env` 已被 `.gitignore` 排除，**不会被提交**，可以放心填。
@@ -177,7 +177,7 @@ curl http://127.0.0.1:8002/readyz    # 200 = 依赖都可用；503 = 有东西�
 ### 方式 D：Docker 部署（推荐，环境一致、一条命令起全栈）
 
 多阶段构建：Node 编译前端 → Python 运行时单域名托管 API + 页面。
-镜像里不带你的密钥，配置全部经 `.env` 注入：
+镜像不内置密钥，配置全部经 `.env` 注入：
 
 ```bash
 docker compose up -d --build     # 构建并后台启动
@@ -256,7 +256,7 @@ customer-support build-kb        # 把知识库灌进 Milvus（需要额外配 L
 | `/readyz` 返回 503 且 `llm_configured: false` | `.env` 里 `LLM_API_KEY` 没填 |
 | 检索报连接错误 / 超时 | RAGFlow 没在跑 → 浏览器打开 `http://localhost` 看看 |
 | **所有问题都「转人工」** | 检索阈值或向量权重不匹配 → 跑 `make calibrate` 重新标定（见 §7） |
-| 报 `Model Not Exist` 之类的模型错误 | `LLM_MODEL` 名字不对 → 用下面一行命令列出你的 key 实际可用的模型名 |
+| 报 `Model Not Exist` 之类的模型错误 | `LLM_MODEL` 名字不对 → 用下面一行命令列出当前 key 实际可用的模型名 |
 | 运行 `pytest` 报 `--cov` 相关错误 | 用 `pytest --no-cov`，或在干净目录跑（项目默认开启覆盖率统计） |
 
 列出当前 key 实际可用的模型名：
@@ -266,7 +266,7 @@ python -c "from openai import OpenAI; from dotenv import load_dotenv; import os;
 ```
 
 > 本机当前实测可用：`deepseek-flash`、`deepseek-v4-pro`。
-> 网上常见的 `deepseek-chat` / `deepseek-reasoner` 在你的服务端不一定存在，
+> 网上常见的 `deepseek-chat` / `deepseek-reasoner` 在具体服务端不一定存在，
 > **以这条命令的输出为准**填 `LLM_MODEL`。
 
 ---

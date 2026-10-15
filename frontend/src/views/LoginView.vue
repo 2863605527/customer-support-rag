@@ -45,7 +45,7 @@ async function submit(): Promise<void> {
   } catch (err) {
     error.value = humanizeError(err);
     const ctx = errorContext(err);
-    // 后端把「下一步该做什么」放在 context 里，前端据此切换 UI，而不是去匹配文案
+    // 后端把下一步动作放在 context 里，前端据此切换 UI，而不是去匹配文案
     if (ctx.captcha_required) {
       captchaRequired.value = true;
       await loadCaptcha();
